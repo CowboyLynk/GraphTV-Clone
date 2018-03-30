@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{show.show_id}}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'DataTables/datatables.css' %}">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['scatter', 'corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart () {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'Episode Number');
+            data.addColumn('number', 'IMDB Rating');
+            data.addColumn({type: 'string', role: 'tooltip'});
+            data.addColumn({type: 'string', role: 'style'});
+
+            data.addRows({{da_data|safe}});
+
+            var options = {
+                chart: {
+                    title: '{{show.show_id}} Ratings',
+                    subtitle: 'From IMDB user ratings'
+                },
+                hAxis: {title: 'Episode Number'},
+                vAxis: {title: 'Rating'},
+                tooltip: {isHtml: true},
+                curveType: 'function',
+                legend: 'none'
+            };
+
+            var chart = new google.visualization.ScatterChart(document.getElementById('scatterchart_material'));
+
+            chart.draw(data, options);
+        }
+
+    </script>
+</head>
+<body>
+    <header></header>
+
+    <main>
+        <div id="scatterchart_material" style="width: 100%; height: 500px;"></div>
+        <table id="showTable">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Season</th>
+                    <th>Episode</th>
+                    <th>Rating</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for episode in episodes %}
+                    {% if episode.rating >= 0 %}
+                        <tr>
+                            <td>{{episode.title}}</td>
+                            <td>{{episode.season.season_num}}</td>
+                            <td>{{episode.ep_num}}</td>
+                            <td>{{episode.rating}}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+
+    <footer></footer>
+    <script type="text/javascript" charset="utf8" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'DataTables/datatables.js' %}"></script>
+    <script>
+        $(document).ready( function () {
+            $('#showTable').DataTable();
+        } );
+    </script>
+
+
+</body>
+</html>
