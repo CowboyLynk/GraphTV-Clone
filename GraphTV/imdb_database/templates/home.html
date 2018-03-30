@@ -3,9 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['scatter', 'corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart () {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'Episode Number');
+            data.addColumn('number', 'IMDB Rating');
+            data.addColumn({type: 'string', role: 'tooltip'});
+            data.addColumn({type: 'string', role: 'style'});
+
+            data.addRows({{da_data|safe}});
+
+            var options = {
+                width: 800,
+                height: 500,
+                chart: {
+                    title: '{{show.show_id}} Ratings',
+                    subtitle: 'From IMDB user ratings'
+                },
+                hAxis: {title: 'Episode Number'},
+                vAxis: {title: 'Rating'},
+                tooltip: {isHtml: true},
+                curveType: 'function',
+                colors: {{ colors|safe }}
+            };
+
+            var chart = new google.visualization.ScatterChart(document.getElementById('scatterchart_material'));
+
+            chart.draw(data, options);
+        }
+
+    </script>
 </head>
 <body>
- {{ show.show_id }}
+ <div id="scatterchart_material"></div>
  <table>
      <tbody>
          {% for episode in episodes %}
