@@ -14,5 +14,5 @@ class Episode(models.Model):
 	season = models.ForeignKey(Season, on_delete=models.CASCADE)
 	title = models.CharField(max_length=10, default="ERROR")
 	ep_num = models.IntegerField()
-	rating = models.IntegerField()  # -1 if there are no ratings
+	rating = models.FloatField()  # -1.0 if there are no ratings
 	num_ratings = models.IntegerField()

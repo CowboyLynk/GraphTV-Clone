@@ -3,3 +3,4 @@
 GraphTV/PopulateDatabase/show_data.json
 GraphTV/PopulateDatabase/name_to_id_mapping.json
 GraphTV/PopulateDatabase/id_to_name_mapping.json
+GraphTV/db.sqlite3
